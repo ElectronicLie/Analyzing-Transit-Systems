@@ -41,6 +41,12 @@ public class Stop extends Node{
 
   private static Vector mtaLines(String strLines){
     double[] aryLines = new double[MTA.lines.length];
+    boolean s42 = false;
+    if (strLines.indexOf("S42") != -1){
+      int s42Index = strLines.indexOf("S42");
+      strLines = strLines.substring(0,s42Index) + strLines.substring(s42Index+3);
+      s42 = true;
+    }
     for (int i = 0; i < aryLines.length; i++){
       if (strLines.indexOf(MTA.lines[i]) != -1){
         aryLines[i] = 1;
@@ -48,6 +54,10 @@ public class Stop extends Node{
         aryLines[i] = 0;
       }
     }
+    if (s42){
+      aryLines[13] = 1;
+    }
+    return new Vector(aryLines);
   }
 
 }
