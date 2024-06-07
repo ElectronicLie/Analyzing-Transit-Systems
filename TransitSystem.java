@@ -1,7 +1,7 @@
 import linalg.*;
 import java.util.ArrayList;
 
-public class System{
+public class TransitSystem{
 
   private ArrayList<Stop> stops;
   private String[] lines;
