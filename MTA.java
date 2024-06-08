@@ -25,15 +25,15 @@ public class MTA{
     // intxns.add(new Stop("Harlem 148", new String[] {"135E"}, "3"));
     // intxns.add(new Stop("135E", new String[] {"96W"}, "23"));
 
-    Network test = new Network(true);
-    Node one = new Node("one", new String[] {"four","two"});
-    Node two = new Node("two", new String[] {"four"});
-    test.add(one);
-    test.add(two);
-    System.out.println(two.deepToString()+"\n");
-
-    MarkovChain mc = new MarkovChain(test);
-    System.out.println(mc);
+    // Network test = new Network(true);
+    // Node one = new Node("one", new String[] {"four","two"});
+    // Node two = new Node("two", new String[] {"four"});
+    // test.add(one);
+    // test.add(two);
+    // System.out.println(two.deepToString()+"\n");
+    //
+    // MarkovChain mc = new MarkovChain(test);
+    // System.out.println(mc);
 
   }
 
