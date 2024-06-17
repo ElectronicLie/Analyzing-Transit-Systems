@@ -26,6 +26,10 @@ public class Stop extends Node{
       "paths", "path weights"};
   }
 
+  public Vector getLinesVector(){
+    return lines;
+  }
+
   public void addLine(String newLine){
     if (lines.get(aryIndexOf(Mta.LINES, newLine)) == 0){
       this.strLines += newLine;

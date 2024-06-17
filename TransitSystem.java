@@ -7,6 +7,21 @@ public class TransitSystem extends Network<Stop>{
     nodes = new ArrayList<Stop>();
   }
 
+  public Matrix coVariance(double[] weights){
+    if (weights.length != nodes.size()){
+      throw new IllegalArgumentException("wights");
+    }
+    ArrayList<Vector> cols = new ArrayList<Vector>();
+    Vector col;
+    for (int s = 0; s < nodes.size(); s++){
+      col = nodes.get(s).getLinesVector();
+      col.scale(weights[s]);
+      cols.add(col);
+    }
+    Matrix data = new Matrix(cols);
+    return data.coVarianceMatrix();
+  }
+
   public String deepToString(){
     return "Transit System" + super.deepToString().substring(7);
   }
