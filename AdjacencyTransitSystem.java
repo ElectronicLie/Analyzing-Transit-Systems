@@ -5,12 +5,12 @@ public class AdjacencyTransitSystem extends TransitSystem{
 
   private int noPaths;
 
-  public AdjacencyTransitSystem(){
-    super();
+  public AdjacencyTransitSystem(String[] lns){
+    super(lns);
   }
 
-  public AdjacencyTransitSystem(int noPaths){
-    super();
+  public AdjacencyTransitSystem(String[] lns, int noPaths){
+    super(lns);
     this.noPaths = noPaths;
   }
 

@@ -5,23 +5,14 @@ import linalg.*;
 public class Stop extends Node{
 
   private Vector lines;
-  private String strLines;
+  private String[] strLines;
+  private TransitSystem system;
 
-  public Stop(String name, String[] neibrs, String strLines){
+  public Stop(String name, String[] neibrs, String[] strAryLines, TransitSystem ts){
     super(name, neibrs);
-    this.strLines = strLines;
-    lines = mtaLines(strLines);
-    terminology = new String[] {"Stop", "Transit System", "adjacent Stops", "adjacent Stops ArrayList",
-      "paths", "path weights"};
-  }
-
-  public Stop(String name, String[] neibrs, String[] strAryLines){
-    super(name, neibrs);
-    lines = mtaLines(strAryLines);
-    this.strLines = "";
-    for (int i = 0; i < strAryLines.length; i++){
-      strLines += strAryLines[i];
-    }
+    system = ts;
+    lines = ts.linesStringsToVector(strAryLines);
+    this.strLines = strAryLines;
     terminology = new String[] {"Stop", "Transit System", "adjacent Stops", "adjacent Stops ArrayList",
       "paths", "path weights"};
   }
@@ -31,9 +22,9 @@ public class Stop extends Node{
   }
 
   public void addLine(String newLine){
-    if (lines.get(aryIndexOf(Mta.LINES, newLine)) == 0){
-      this.strLines += newLine;
-      lines = mtaLines(strLines);
+    if (lines.get(aryIndexOf(system.getLineNames(), newLine)) == 0){
+      this.strLines = Matrix.aryAppend(strLines, newLine);
+      lines = system.linesStringsToVector(strLines);
     }
   }
 
@@ -49,41 +40,6 @@ public class Stop extends Node{
     for (int n = 0; n < newNabrs.length; n++){
       addNabr(newNabrs[n]);
     }
-  }
-
-  private static Vector mtaLines(String[] strLines){
-    double[] aryLines = new double[Mta.LINES.length];
-    for (int i = 0; i < aryLines.length; i++){
-      for (int j = 0; j < strLines.length; j++){
-        if (strLines[j].equals(Mta.LINES[i])){
-          aryLines[i] = 1;
-        }else{
-          aryLines[i] = 0;
-        }
-      }
-    }
-    return new Vector(aryLines);
-  }
-
-  private static Vector mtaLines(String strLines){
-    double[] aryLines = new double[Mta.LINES.length];
-    boolean s42 = false;
-    if (strLines.indexOf("S42") != -1){
-      int s42Index = strLines.indexOf("S42");
-      strLines = strLines.substring(0,s42Index) + strLines.substring(s42Index+3);
-      s42 = true;
-    }
-    for (int i = 0; i < aryLines.length; i++){
-      if (strLines.indexOf(Mta.LINES[i]) != -1){
-        aryLines[i] = 1;
-      }else{
-        aryLines[i] = 0;
-      }
-    }
-    if (s42){
-      aryLines[Node.aryIndexOf(Mta.LINES, "S42")] = 1;
-    }
-    return new Vector(aryLines);
   }
 
 }

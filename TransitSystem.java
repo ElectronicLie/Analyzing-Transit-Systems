@@ -1,13 +1,17 @@
 import linalg.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class TransitSystem extends Network<Stop>{
 
-  public TransitSystem(){
+  protected String[] lines;
+
+  public TransitSystem(String[] lns){
     nodes = new ArrayList<Stop>();
+    this.lines = lns;
   }
 
-  public Matrix coVariance(double[] weights){
+  public Matrix stationLineData(double[] weights){
     if (weights.length != nodes.size()){
       throw new IllegalArgumentException("wights");
     }
@@ -19,7 +23,32 @@ public class TransitSystem extends Network<Stop>{
       cols.add(col);
     }
     Matrix data = new Matrix(cols);
-    return data.coVarianceMatrix();
+    return data;
+  }
+
+  public String[] getLineNames(){
+    return this.lines;
+  }
+
+  public Vector linesStringsToVector(String[] strLines){
+    int[] ary = new int[this.lines.length];
+    for (int i = 0; i < ary.length; i++){
+      if (Matrix.aryContains(strLines, this.lines[i])){
+        ary[i] = 1;
+      }else{
+        ary[i] = 0;
+      }
+    }
+    if (numberOfOnesInArray(ary) < strLines.length){
+      throw new IllegalArgumentException
+        ("one or more of the line names in "+Arrays.toString(strLines)+" are not lines included in this"
+        +" TransitSystem");
+    }
+    return new Vector(ary);
+  }
+
+  public Matrix stationLineData(Vector weights){
+    return stationLineData(weights.getVals());
   }
 
   public String deepToString(){
@@ -31,12 +60,15 @@ public class TransitSystem extends Network<Stop>{
   }
 
   public void addLine(String[] nodeNames, String lineName){
+    if (! Matrix.aryContains(this.lines, lineName)){
+      throw new IllegalArgumentException(lineName+" is not a line in the TransitSystem");
+    }
     Stop newStop;
     int index;
     for (int n = 0; n < nodeNames.length; n++){
       index = indexOfNode(nodeNames[n]);
       if (index == -1){
-        newStop = new Stop(nodeNames[n], aryAdjacents(nodeNames, n), lineName);
+        newStop = new Stop(nodeNames[n], aryAdjacents(nodeNames, n), new String[] {lineName}, this);
         addNode(newStop);
       }else{
         nodes.get(index).addLine(lineName);
@@ -59,7 +91,7 @@ public class TransitSystem extends Network<Stop>{
     }
   }
 
-  public static String[] aryAdjacents(String[] ary, int index){
+  private static String[] aryAdjacents(String[] ary, int index){
     if (ary.length <= 1){
       return new String[] {};
     }
@@ -70,6 +102,16 @@ public class TransitSystem extends Network<Stop>{
       return new String[] {ary[index-1]};
     }
     return new String[] {ary[index-1], ary[index+1]};
+  }
+
+  private static int numberOfOnesInArray(int[] ary){
+    int no = 0;
+    for (int i = 0; i < ary.length; i++){
+      if (ary[i] == 1){
+        no++;
+      }
+    }
+    return no;
   }
 
 }
