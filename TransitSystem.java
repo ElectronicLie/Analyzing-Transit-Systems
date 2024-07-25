@@ -59,7 +59,7 @@ public class TransitSystem extends Network<Stop>{
     }
   }
 
-  static String[] aryAdjacents(String[] ary, int index){
+  public static String[] aryAdjacents(String[] ary, int index){
     if (ary.length <= 1){
       return new String[] {};
     }
