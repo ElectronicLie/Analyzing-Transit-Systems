@@ -5,13 +5,24 @@ import java.util.Arrays;
 public class TransitSystem extends Network<Stop>{
 
   protected String[] lines;
+  protected MarkovChain mc;
 
   public TransitSystem(String[] lns){
     nodes = new ArrayList<Stop>();
     this.lines = lns;
+    mc = new MarkovChain(this);
   }
 
-  public Matrix stationLineData(double[] weights){
+  public double[] getStopWeights(){
+    return this.mc.getSteadyState();
+  }
+
+  public String stopWeightsToString(){
+    return this.mc.steadyStateToString();
+  }
+
+  public Matrix stationLineData(){
+    double[] weights = getStopWeights();
     if (weights.length != nodes.size()){
       throw new IllegalArgumentException("wights");
     }
@@ -47,18 +58,6 @@ public class TransitSystem extends Network<Stop>{
     return new Vector(ary);
   }
 
-  public Matrix stationLineData(Vector weights){
-    return stationLineData(weights.getVals());
-  }
-
-  public String deepToString(){
-    return "Transit System" + super.deepToString().substring(7);
-  }
-
-  public String sumToString(){
-    return "Transit System" + super.sumToString().substring(7);
-  }
-
   public void addLine(String[] nodeNames, String lineName){
     if (! Matrix.aryContains(this.lines, lineName)){
       throw new IllegalArgumentException(lineName+" is not a line in the TransitSystem");
@@ -89,6 +88,14 @@ public class TransitSystem extends Network<Stop>{
         updateNode(index);
       }
     }
+  }
+
+  public String deepToString(){
+    return "Transit System" + super.deepToString().substring(7);
+  }
+
+  public String sumToString(){
+    return "Transit System" + super.sumToString().substring(7);
   }
 
   private static String[] aryAdjacents(String[] ary, int index){
