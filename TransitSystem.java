@@ -2,26 +2,41 @@ import linalg.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class TransitSystem extends Network<Stop>{
+public class TransitSystem extends EvenNetwork<Stop>{
 
   protected String[] lines;
   protected MarkovChain mc;
+  protected boolean doneAddingLines;
 
   public TransitSystem(String[] lns){
     nodes = new ArrayList<Stop>();
     this.lines = lns;
+    doneAddingLines = false;
+  }
+
+  public void doneAddingLines(){
+    doneAddingLines = true;
     mc = new MarkovChain(this);
   }
 
   public double[] getStopWeights(){
-    return this.mc.getSteadyState();
+    return this.mc.getSteadyState().getVals();
   }
 
   public String stopWeightsToString(){
     return this.mc.steadyStateToString();
   }
 
+  public String sortedStopWeightsToString(){
+    return this.mc.sortedSteadyStateToString();
+  }
+
+  public MarkovChain getMarkovChain(){
+    return mc;
+  }
+
   public Matrix stationLineData(){
+    System.out.println("station-lines data is being figured out");
     double[] weights = getStopWeights();
     if (weights.length != nodes.size()){
       throw new IllegalArgumentException("wights");
@@ -34,6 +49,7 @@ public class TransitSystem extends Network<Stop>{
       cols.add(col);
     }
     Matrix data = new Matrix(cols);
+    System.out.println("station-lines data is complete");
     return data;
   }
 

@@ -3,11 +3,13 @@ import linalg.*;
 public class Main{
 
   public static void main(String[] args){
-    Mta stations = new Mta("intxns", "station");
-    Vector mtaStopWeights = stations.getStationWeights();
-    // System.out.println(stations.sortedStationWeightsToString());
-    Matrix data = stations.getSystem().stationLineData(mtaStopWeights.getVals());
-    System.out.println(data.weightedAverageOfPrincipalComponents());
+    TransitSystem mta = new TransitSystem(Mta.LINES);
+    Mta.addIntxnsAndTerminals(mta);
+    mta.doneAddingLines();
+    // System.out.println(mta.sumToString()+"\nend of network.toString()");
+    // System.out.println("markov chain:\n"+mta.getMarkovChain().toString());
+    System.out.println(mta.sortedStopWeightsToString());
+    System.out.println(mta.stationLineData().weightedAverageOfPrincipalComponents());
   }
 
 }
